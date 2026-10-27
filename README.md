@@ -2,6 +2,14 @@
 
 GitHub, GitLab veya diğer HTTPS Git sunucularındaki herkese açık depoları içe alıp inceleyebileceğin, dosyalarını düzenleyip Docker içinde çalıştırabileceğin kişisel Windows masaüstü uygulaması.
 
+## Windows paketini indir
+
+- [Windows kurulum dosyası (.exe)](https://github.com/booyygpt-ops/byzapp/releases/download/v0.1.0/Byz-Workspace-Setup-0.1.0-x64.exe)
+- [Çıkarıp çalıştırmak için ZIP](https://github.com/booyygpt-ops/byzapp/releases/download/v0.1.0/Byz-Workspace-0.1.0-Windows-x64.zip)
+- [Sürüm notları ve sağlama toplamları](https://github.com/booyygpt-ops/byzapp/releases/tag/v0.1.0)
+
+Windows x64, Git for Windows ve çalışan Docker Desktop (WSL 2 / Linux containers) gerekir. Paketler imzasızdır; Windows üzerinde derlenmiştir, etkileşimli Windows testi henüz yapılmamıştır.
+
 ## Windows'ta kullanım
 
 Gereksinimler: Windows 10/11 x64, WSL 2 kullanan **Docker Desktop (Linux containers)** ve **Git for Windows**. Docker açık olmalı. Kaynaktan başlatmak veya kurulum dosyası üretmek için ayrıca Node.js 22+ gerekir. Uygulama içine alınan projeler için bilgisayara ayrıca Node/Python kurmak gerekmez.
