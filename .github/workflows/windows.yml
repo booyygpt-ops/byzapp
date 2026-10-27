@@ -10,16 +10,59 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run dist:win
+      - run: npm run build
+      - run: npx electron-builder --win nsis zip --x64 --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - name: Name packages and generate checksums
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $zip = Get-ChildItem release -Filter *.zip | Select-Object -First 1
+          $exe = Get-ChildItem release -Filter *.exe | Select-Object -First 1
+          if (!$zip -or !$exe) { throw 'Windows packages are missing' }
+          Move-Item $zip.FullName "release/Byz-Workspace-$version-Windows-x64.zip"
+          Move-Item $exe.FullName "release/Byz-Workspace-Setup-$version-x64.exe"
+          $assets = Get-ChildItem release -File | Where-Object { $_.Extension -in '.exe', '.zip' }
+          $lines = foreach ($asset in $assets) {
+            "$((Get-FileHash $asset.FullName -Algorithm SHA256).Hash.ToLower())  $($asset.Name)"
+          }
+          Set-Content release/SHA256SUMS.txt -Value $lines -Encoding ascii
       - uses: actions/upload-artifact@v4
         with:
           name: Byz-Workspace-Windows
-          path: release/*.exe
+          path: |
+            release/*.exe
+            release/*.zip
+            release/SHA256SUMS.txt
           if-no-files-found: error
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: Byz-Workspace-Windows
+          path: release
+      - name: Publish Windows packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release create "$RELEASE_TAG" release/*.exe release/*.zip release/SHA256SUMS.txt \
+            --verify-tag --title "Byz Workspace $RELEASE_TAG" \
+            --notes-file .github/RELEASE_NOTES.md

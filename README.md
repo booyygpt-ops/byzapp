@@ -32,7 +32,7 @@ npm ci
 npm run dist:win
 ```
 
-NSIS kurulum dosyası `release/` klasörüne çıkar. GitHub Actions'taki **Windows installer** iş akışı da elle başlatılabilir; `.exe` çıktısını artifact olarak saklar. Bu yapılandırma kendiliğinden GitHub'a dosya veya sürüm yayımlamaz. Kurulum dosyası imzasızdır; dağıtım öncesi kod imzalama ayrıca yapılandırılmalıdır.
+NSIS kurulum dosyası `release/` klasörüne çıkar. GitHub Actions'taki **Windows installer** iş akışı elle başlatıldığında EXE ve ZIP çıktılarını artifact olarak saklar. `v*` etiketi gönderildiğinde Windows üzerinde iki paketi derler ve sağlama toplamlarıyla GitHub Releases'e yayımlar. Yayınlama izni yalnızca ayrı release işine verilir. Kurulum dosyası imzasızdır; dağıtım öncesi kod imzalama ayrıca yapılandırılmalıdır.
 
 ## Destek kapsamı
 
