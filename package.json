@@ -1,0 +1,70 @@
+{
+  "name": "byz-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server/index.js --dev",
+    "build": "vite build",
+    "start": "node server/index.js",
+    "test": "node --test tests/*.test.js",
+    "runtime:build": "docker build -t byz-runtime:1 ./runtime",
+    "desktop": "electron .",
+    "package": "electron-builder --dir",
+    "dist": "electron-builder",
+    "test:e2e": "playwright test",
+    "dist:win": "npm run build && electron-builder --win nsis --x64",
+    "dist:win:zip": "npm run build && electron-builder --win zip --x64 --publish never"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "vite": "^6.4.1",
+    "electron": "^39.0.0",
+    "electron-builder": "^26.0.12",
+    "@playwright/test": "^1.56.1"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "dev.byz.workspace",
+    "productName": "Byz Workspace",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis",
+      "signAndEditExecutable": false
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "files": [
+      "dist/**/*",
+      "server/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "runtime",
+        "to": "runtime"
+      }
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  },
+  "description": "Git depolarını masaüstünde içe aktar, düzenle ve Docker içinde çalıştır.",
+  "author": "Byz"
+}
